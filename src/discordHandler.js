@@ -58,6 +58,8 @@ client.on('whatsappMessage', async (message) => {
     }
     else if (message.file === -1 && !state.settings.LocalDownloads) {
       msgContent += "WA2DC Attention: Received a file, but it's over 8MB. Check WhatsApp on your phone or enable local downloads.";
+    } else if (message.file === -2) {
+      msgContent += 'WA2DC Attention: Received a file, but something unexpected happened.';
     } else {
       files.push(message.file);
     }

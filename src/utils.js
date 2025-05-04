@@ -522,9 +522,18 @@ const whatsapp = {
     const [nMsgType, msg] = this.getMessage(rawMsg, msgType);
     if (msg.fileLength == null) return;
     if (msg.fileLength.low > 26214400 && !state.settings.LocalDownloads) return -1;
+
+    let attachment;
+    try {
+      attachment = await downloadMediaMessage(rawMsg, 'buffer', {}, { logger: state.logger, reuploadRequest: state.waClient.updateMediaMessage });
+    } catch (error) {
+      console.log(`Error sending attachment: ${error}`);
+      return -2;
+    }
+
     return {
       name: this.getFilename(msg, nMsgType),
-      attachment: await downloadMediaMessage(rawMsg, 'buffer', {}, { logger: state.logger, reuploadRequest: state.waClient.updateMediaMessage }),
+      attachment: attachment,
       largeFile: msg.fileLength.low > 26214400,
     };
   },
